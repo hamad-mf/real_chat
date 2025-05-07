@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "59795979623",
+    "project_id": "real-chat-ad0b8",
+    "storage_bucket": "real-chat-ad0b8.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:59795979623:android:2b771e92527ee34fe603c2",
+        "android_client_info": {
+          "package_name": "com.example.real_chat"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAt-s-6v_Ex3PEdkp1dcfD1WJqg05sgDxg"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
