@@ -5,11 +5,9 @@ import 'package:flutter_custom_clippers/flutter_custom_clippers.dart';
 import 'package:provider/provider.dart';
 import 'package:real_chat/Controller/Sign%20Up%20Screen%20Controller/sign_up_controller.dart';
 import 'package:real_chat/Utils/color_constants.dart';
-import 'package:real_chat/View/Add%20Personal%20Details/add_personal_details_screen.dart';
 import 'package:real_chat/View/SignIn%20Screen/sign_in_screen.dart';
 import 'package:real_chat/View/Widgets/custom_textfield.dart';
 import 'package:real_chat/View/Widgets/responsive_helper.dart';
-import 'package:real_chat/main.dart';
 
 class SignUpScreen extends StatefulWidget {
   const SignUpScreen({super.key});
