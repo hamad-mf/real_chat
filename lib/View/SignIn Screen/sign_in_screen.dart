@@ -1,6 +1,9 @@
+import 'dart:developer';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_custom_clippers/flutter_custom_clippers.dart';
 import 'package:real_chat/Utils/color_constants.dart';
+import 'package:real_chat/View/SignUp%20Screen/sign_up_screen.dart';
 import 'package:real_chat/View/Widgets/custom_textfield.dart';
 import 'package:real_chat/View/Widgets/responsive_helper.dart';
 
@@ -49,7 +52,36 @@ class _SignInScreenState extends State<SignInScreen> {
                           style: ButtonStyle(
                               minimumSize:
                                   WidgetStatePropertyAll(Size(112, 53))),
-                          onPressed: () {},
+                          onPressed: () {
+                            log("navigating to signup screen");
+                            Navigator.pushReplacement(
+                              context,
+                              PageRouteBuilder(
+                                pageBuilder:
+                                    (context, animation, secondaryAnimation) =>
+                                        SignUpScreen(),
+                                transitionsBuilder: (context, animation,
+                                    secondaryAnimation, child) {
+                                  const begin =
+                                      Offset(1.0, 0.0); // slide from right
+                                  const end = Offset.zero;
+                                  const curve = Curves.ease;
+
+                                  final tween = Tween(begin: begin, end: end)
+                                      .chain(CurveTween(curve: curve));
+                                  final offsetAnimation =
+                                      animation.drive(tween);
+
+                                  return SlideTransition(
+                                    position: offsetAnimation,
+                                    child: child,
+                                  );
+                                },
+                              ),
+                              // (Route<dynamic> route) =>
+                              //     false, // this removes all previous routes
+                            );
+                          },
                           child: Text(
                             "Register",
                             style: TextStyle(
@@ -80,6 +112,7 @@ class _SignInScreenState extends State<SignInScreen> {
             child: Column(
               children: [
                 CustomTextField(
+                    icon: Icon(Icons.email),
                     controller: _emailController,
                     hint: "Enter Your Email",
                     label: "Email",
@@ -89,6 +122,7 @@ class _SignInScreenState extends State<SignInScreen> {
                   height: 30,
                 ),
                 CustomTextField(
+                    icon: Icon(Icons.lock),
                     controller: _passwordController,
                     hint: "Enter Your Password",
                     label: "Password",

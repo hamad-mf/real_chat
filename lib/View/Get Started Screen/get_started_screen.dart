@@ -81,7 +81,7 @@ class _GetStartedScreenState extends State<GetStartedScreen> {
               children: [
                 SmoothPageIndicator(
                   controller: _controller,
-                  count: 3,
+                  count: 4,
                   effect: WormEffect(
                     dotHeight: 10,
                     dotWidth: 10,
@@ -114,6 +114,7 @@ class _GetStartedScreenState extends State<GetStartedScreen> {
                       },
                       child: Text(onLastPage ? "Get Started" : "Next"),
                       style: ElevatedButton.styleFrom(
+                        foregroundColor: Colors.white,
                         padding:
                             EdgeInsets.symmetric(horizontal: 24, vertical: 12),
                         shape: StadiumBorder(),

@@ -6,14 +6,18 @@ class CustomTextField extends StatelessWidget {
   final double height;
   final double width;
   final bool obscureText;
+  final Widget? icon;
+  final TextInputType? keyboardType;
   final TextEditingController? controller;
   final String? Function(String?)? validator;
 
   const CustomTextField({
+    this.keyboardType,
     required this.label,
     required this.height,
     required this.width,
     this.hint,
+    this.icon,
     this.obscureText = false,
     this.controller,
     this.validator,
@@ -23,11 +27,12 @@ class CustomTextField extends StatelessWidget {
   Widget build(BuildContext context) {
     return SizedBox(
       width: width,
-      height: height,
       child: TextFormField(
+        keyboardType: keyboardType,
         controller: controller,
         obscureText: obscureText,
         decoration: InputDecoration(
+          prefixIcon: icon,
           labelText: label,
           hintText: hint,
           hintStyle: TextStyle(color: Colors.grey),
@@ -38,19 +43,27 @@ class CustomTextField extends StatelessWidget {
           ),
           enabledBorder: OutlineInputBorder(
             borderRadius: BorderRadius.circular(15.0),
-            borderSide: BorderSide(color: Colors.blueGrey, width: 1.5),
+            borderSide: BorderSide(
+              color: Colors.blueGrey,
+            ),
           ),
           focusedBorder: OutlineInputBorder(
             borderRadius: BorderRadius.circular(15.0),
-            borderSide: BorderSide(color: Colors.blue, width: 2.0),
+            borderSide: BorderSide(
+              color: Colors.blue,
+            ),
           ),
           errorBorder: OutlineInputBorder(
             borderRadius: BorderRadius.circular(15.0),
-            borderSide: BorderSide(color: Colors.red, width: 1.5),
+            borderSide: BorderSide(
+              color: Colors.red,
+            ),
           ),
           focusedErrorBorder: OutlineInputBorder(
             borderRadius: BorderRadius.circular(15.0),
-            borderSide: BorderSide(color: Colors.redAccent, width: 2.0),
+            borderSide: BorderSide(
+              color: Colors.redAccent,
+            ),
           ),
           filled: true,
           fillColor: Colors.grey[100],

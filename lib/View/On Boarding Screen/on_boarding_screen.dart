@@ -8,7 +8,7 @@ class OnBoardingScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    ResponsiveHelper.init(context); 
+    ResponsiveHelper.init(context);
     return Scaffold(
       body: Column(
         children: [
@@ -67,6 +67,14 @@ class OnBoardingScreen extends StatelessWidget {
                             fontWeight: FontWeight.w800,
                             color: ColorConstants.Textbluelight),
                       ),
+                      SizedBox(
+                        height: 20,
+                      ),
+                      Icon(
+                        Icons.arrow_forward,
+                        size: 35,
+                        color: ColorConstants.Textbluelight,
+                      )
                     ],
                   )),
             ]),
