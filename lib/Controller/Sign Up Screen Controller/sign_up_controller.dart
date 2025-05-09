@@ -237,8 +237,7 @@ Future<String?> uploadImageToImgbb(File imageFile) async {
       bg: Colors.green,
     );
 
-    SharedPreferences prefs = await SharedPreferences.getInstance();
-    await prefs.setBool('isLoggedIn', true);
+   
 
     Navigator.pushAndRemoveUntil(
       context,

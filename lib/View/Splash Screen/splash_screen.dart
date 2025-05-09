@@ -4,6 +4,7 @@ import 'dart:developer';
 import 'package:flutter/material.dart';
 import 'package:real_chat/View/On%20Boarding%20Screen/on_boarding_screen.dart';
 import 'package:real_chat/View/Set%20Pin%20Screen/set_pin_screen.dart';
+import 'package:real_chat/View/Widgets/custom_bottom_navbar_screen.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class SplashScreen extends StatefulWidget {
@@ -34,7 +35,7 @@ class _SplashScreenState extends State<SplashScreen> {
       if (isUserLoggedIn) {
         // Navigate to
         Navigator.of(context)
-            .pushReplacement(MaterialPageRoute(builder: (_) => SetPinScreen()));
+            .pushReplacement(MaterialPageRoute(builder: (_) => CustomBottomNavbarScreen()));
       } else {
         // Navigate to onBoarding screen
         log("false");
