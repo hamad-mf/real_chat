@@ -10,7 +10,6 @@ import 'package:image_picker/image_picker.dart';
 import 'package:real_chat/Utils/app_utils.dart';
 import 'package:real_chat/View/Add%20Personal%20Details/add_personal_details_screen.dart';
 import 'package:real_chat/View/Set%20Pin%20Screen/set_pin_screen.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 
 class SignUpController with ChangeNotifier {
   bool isLoading = false;

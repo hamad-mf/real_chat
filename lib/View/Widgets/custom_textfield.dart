@@ -1,11 +1,12 @@
 import 'package:flutter/material.dart';
 
 class CustomTextField extends StatelessWidget {
-  final String label;
+  final String? label;
   final String? hint;
   final double height;
   final double width;
   final bool obscureText;
+  final bool isReadonly;
   final Widget? icon;
   final void Function()? OnTap;
   final TextInputType? keyboardType;
@@ -15,7 +16,8 @@ class CustomTextField extends StatelessWidget {
   const CustomTextField({
     this.keyboardType,
     this.OnTap,
-    required this.label,
+    this.isReadonly = false,
+    this.label,
     required this.height,
     required this.width,
     this.hint,
@@ -31,6 +33,7 @@ class CustomTextField extends StatelessWidget {
       width: width,
       child: TextFormField(
         onTap: OnTap,
+        readOnly: isReadonly,
         keyboardType: keyboardType,
         controller: controller,
         obscureText: obscureText,
