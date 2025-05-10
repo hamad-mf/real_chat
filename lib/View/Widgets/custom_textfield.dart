@@ -7,12 +7,14 @@ class CustomTextField extends StatelessWidget {
   final double width;
   final bool obscureText;
   final Widget? icon;
+  final void Function()? OnTap;
   final TextInputType? keyboardType;
   final TextEditingController? controller;
   final String? Function(String?)? validator;
 
   const CustomTextField({
     this.keyboardType,
+    this.OnTap,
     required this.label,
     required this.height,
     required this.width,
@@ -28,6 +30,7 @@ class CustomTextField extends StatelessWidget {
     return SizedBox(
       width: width,
       child: TextFormField(
+        onTap: OnTap,
         keyboardType: keyboardType,
         controller: controller,
         obscureText: obscureText,

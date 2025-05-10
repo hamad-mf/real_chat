@@ -12,12 +12,32 @@ class AddPersonalDetailsScreen extends StatefulWidget {
   const AddPersonalDetailsScreen({super.key});
 
   @override
-  State<AddPersonalDetailsScreen> createState() => _AddPersonalDetailsScreenState();
+  State<AddPersonalDetailsScreen> createState() =>
+      _AddPersonalDetailsScreenState();
 }
 
 class _AddPersonalDetailsScreenState extends State<AddPersonalDetailsScreen> {
+  String _selectedGender = 'Male'; // default value
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
   final TextEditingController _nameController = TextEditingController();
+  final TextEditingController _UsernameController = TextEditingController();
+  final TextEditingController _dobController = TextEditingController();
+  DateTime? _selectedDate;
+
+  Future<void> _pickDate(BuildContext context) async {
+    final DateTime? picked = await showDatePicker(
+      context: context,
+      initialDate: DateTime.now(),
+      firstDate: DateTime(1900),
+      lastDate: DateTime.now(),
+    );
+    if (picked != null) {
+      setState(() {
+        _selectedDate = picked;
+        _dobController.text = "${picked.day}/${picked.month}/${picked.year}";
+      });
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -34,7 +54,8 @@ class _AddPersonalDetailsScreenState extends State<AddPersonalDetailsScreen> {
                 ClipPath(
                   clipper: WaveClipperTwo(),
                   child: Container(
-                    padding: EdgeInsets.symmetric(horizontal: ResponsiveHelper.width(30)),
+                    padding: EdgeInsets.symmetric(
+                        horizontal: ResponsiveHelper.width(30)),
                     height: 290,
                     color: ColorConstants.ButtonColor1,
                     child: Column(
@@ -46,24 +67,32 @@ class _AddPersonalDetailsScreenState extends State<AddPersonalDetailsScreen> {
                           children: [
                             ElevatedButton(
                               style: ButtonStyle(
-                                minimumSize: WidgetStatePropertyAll(Size(112, 53)),
+                                minimumSize:
+                                    WidgetStatePropertyAll(Size(112, 53)),
                               ),
                               onPressed: () {
                                 log("navigating to signin screen");
                                 Navigator.pushReplacement(
                                   context,
                                   PageRouteBuilder(
-                                    pageBuilder: (context, animation, secondaryAnimation) =>
+                                    pageBuilder: (context, animation,
+                                            secondaryAnimation) =>
                                         SignInScreen(),
-                                    transitionsBuilder: (context, animation, secondaryAnimation, child) {
+                                    transitionsBuilder: (context, animation,
+                                        secondaryAnimation, child) {
                                       const begin = Offset(-1.0, 0.0);
                                       const end = Offset.zero;
                                       const curve = Curves.ease;
 
-                                      final tween = Tween(begin: begin, end: end).chain(CurveTween(curve: curve));
-                                      final offsetAnimation = animation.drive(tween);
+                                      final tween =
+                                          Tween(begin: begin, end: end)
+                                              .chain(CurveTween(curve: curve));
+                                      final offsetAnimation =
+                                          animation.drive(tween);
 
-                                      return SlideTransition(position: offsetAnimation, child: child);
+                                      return SlideTransition(
+                                          position: offsetAnimation,
+                                          child: child);
                                     },
                                   ),
                                 );
@@ -107,7 +136,9 @@ class _AddPersonalDetailsScreenState extends State<AddPersonalDetailsScreen> {
                         backgroundColor: Colors.amber,
                         backgroundImage: signUpController.selectedImage != null
                             ? FileImage(signUpController.selectedImage!)
-                            : const AssetImage('assets/images/default_avatar.png') as ImageProvider,
+                            : const AssetImage(
+                                    'assets/images/default_avatar.png')
+                                as ImageProvider,
                       ),
                       Positioned(
                         right: 1,
@@ -149,6 +180,81 @@ class _AddPersonalDetailsScreenState extends State<AddPersonalDetailsScreen> {
                         return null;
                       },
                     ),
+                    SizedBox(
+                      height: 20,
+                    ),
+                    CustomTextField(
+                      controller: _UsernameController,
+                      hint: "Enter Your Username",
+                      label: "Username",
+                      height: 50,
+                      width: ResponsiveHelper.width(290),
+                      validator: (value) {
+                        if (value == null || value.isEmpty) {
+                          return 'Please enter your username';
+                        }
+                        return null;
+                      },
+                    ),
+                    SizedBox(
+                      height: 20,
+                    ),
+                    Padding(
+                      padding: const EdgeInsets.symmetric(horizontal: 34),
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Padding(
+                              padding: EdgeInsets.symmetric(horizontal: 15),
+                              child: Text(
+                                "Select Gender:",
+                                style: TextStyle(
+                                    color: ColorConstants.Textblue,
+                                    fontSize: 16,
+                                    fontWeight: FontWeight.bold),
+                              )),
+                          Row(
+                            children: [
+                              Radio<String>(
+                                value: 'Male',
+                                groupValue: _selectedGender,
+                                onChanged: (value) {
+                                  setState(() {
+                                    _selectedGender = value!;
+                                  });
+                                },
+                              ),
+                              const Text('Male'),
+                              SizedBox(width: 20),
+                              Radio<String>(
+                                value: 'Female',
+                                groupValue: _selectedGender,
+                                onChanged: (value) {
+                                  setState(() {
+                                    _selectedGender = value!;
+                                  });
+                                },
+                              ),
+                              const Text('Female'),
+                            ],
+                          ),
+                        ],
+                      ),
+                    ),
+                    CustomTextField(
+                      controller: _dobController,
+                      hint: "Select Your Date of Birth",
+                      label: "Date of Birth",
+                      height: 50,
+                      width: ResponsiveHelper.width(290),
+                      OnTap: () => _pickDate(context),
+                      validator: (value) {
+                        if (value == null || value.isEmpty) {
+                          return 'Please select your date of birth';
+                        }
+                        return null;
+                      },
+                    ),
                   ],
                 ),
               ),
@@ -169,10 +275,15 @@ class _AddPersonalDetailsScreenState extends State<AddPersonalDetailsScreen> {
                         log("navigating to pin setting screen");
                         if (_formKey.currentState!.validate()) {
                           signUpController.onAddProfile(
+                            username: _UsernameController.text,
+                            gender: _selectedGender,
+                            dob: _selectedDate,
                             name: _nameController.text,
                             context: context,
                           );
                           _nameController.clear();
+                          _UsernameController.clear();
+                          
                         }
                       },
                       child: const Padding(

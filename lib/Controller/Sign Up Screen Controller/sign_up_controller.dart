@@ -18,8 +18,6 @@ class SignUpController with ChangeNotifier {
   String? uploadedImageUrl;
   bool isUploading = false;
 
-
-
   /// Pick image from gallery
   Future<void> pickImage() async {
     final picker = ImagePicker();
@@ -30,51 +28,46 @@ class SignUpController with ChangeNotifier {
     }
   }
 
-
-
-  /// Upload image to Imgur
   /// Upload image to ImgBB
-Future<String?> uploadImageToImgbb(File imageFile) async {
-  const String apiKey = 'ba920ecb770b8218fc19a1da5636632c'; // Replace this with your actual ImgBB API key
+  Future<String?> uploadImageToImgbb(File imageFile) async {
+    const String apiKey =
+        'ba920ecb770b8218fc19a1da5636632c'; // Replace this with your actual ImgBB API key
 
-  try {
-    final base64Image = base64Encode(await imageFile.readAsBytes());
-    final response = await http.post(
-      Uri.parse("https://api.imgbb.com/1/upload?key=$apiKey"),
-      body: {
-        "image": base64Image,
-      },
-    );
+    try {
+      final base64Image = base64Encode(await imageFile.readAsBytes());
+      final response = await http.post(
+        Uri.parse("https://api.imgbb.com/1/upload?key=$apiKey"),
+        body: {
+          "image": base64Image,
+        },
+      );
 
-    final jsonData = jsonDecode(response.body);
+      final jsonData = jsonDecode(response.body);
 
-    if (jsonData['success'] == true) {
-      return jsonData['data']['url'];
-    } else {
-      log('ImgBB Upload Failed: ${jsonData['error']['message']}');
+      if (jsonData['success'] == true) {
+        return jsonData['data']['url'];
+      } else {
+        log('ImgBB Upload Failed: ${jsonData['error']['message']}');
+      }
+    } catch (e) {
+      log('Error uploading image: $e');
     }
-  } catch (e) {
-    log('Error uploading image: $e');
+
+    return null;
   }
 
-  return null;
-}
-
-/// Save prescription to Firestore
+  /// Save prescription to Firestore
   Future<void> savePrescriptionToFirestore({
     required String userId,
-
     required String imageUrl,
   }) async {
     try {
-     
-
-       await FirebaseFirestore.instance
-        .collection('profile_details')
-        .doc(userId)
-        .update({
-       'image_url': imageUrl,
-    });
+      await FirebaseFirestore.instance
+          .collection('profile_details')
+          .doc(userId)
+          .update({
+        'image_url': imageUrl,
+      });
 
       log('Prescription saved to Firestore.');
     } catch (e) {
@@ -85,7 +78,6 @@ Future<String?> uploadImageToImgbb(File imageFile) async {
   /// Upload and Save
   Future<void> uploadAndSavePrescription({
     required String userId,
-    
     required BuildContext context,
   }) async {
     if (selectedImage == null) return;
@@ -98,7 +90,6 @@ Future<String?> uploadImageToImgbb(File imageFile) async {
       if (imageUrl != null) {
         await savePrescriptionToFirestore(
           userId: userId,
-          
           imageUrl: imageUrl,
         );
         uploadedImageUrl = imageUrl;
@@ -116,10 +107,27 @@ Future<String?> uploadImageToImgbb(File imageFile) async {
   void reset() {
     selectedImage = null;
     uploadedImageUrl = null;
-   
+
     notifyListeners();
   }
 
+Future<bool> isUsernameAvailable(String username) async {
+  final querySnapshot = await FirebaseFirestore.instance
+      .collection('profile_details')
+      .where('username', isEqualTo: username.toLowerCase())
+      .get();
+
+  if (querySnapshot.docs.isNotEmpty) {
+    for (var doc in querySnapshot.docs) {
+      final existingUsername = doc['username'];
+      print("Checked username conflict: $existingUsername");
+    }
+  } else {
+    print("Username '$username' is available.");
+  }
+
+  return querySnapshot.docs.isEmpty;
+}
   Future<void> onRegsitration(
       {required String email,
       required String password,
@@ -139,7 +147,7 @@ Future<String?> uploadImageToImgbb(File imageFile) async {
             bg: Colors.green,
             context: context,
             message: "Registration successful");
-       
+
         Navigator.pushReplacement(
           context,
           PageRouteBuilder(
@@ -161,8 +169,6 @@ Future<String?> uploadImageToImgbb(File imageFile) async {
               );
             },
           ),
-          // (Route<dynamic> route) =>
-          //     false, // this removes all previous routes
         );
       }
     } on FirebaseAuthException catch (e) {
@@ -192,79 +198,97 @@ Future<String?> uploadImageToImgbb(File imageFile) async {
   }
 
   Future<void> onAddProfile({
-  required String name,
-  required BuildContext context,
-}) async {
-  isLoading = true;
-  notifyListeners();
+    required String username,
+    required String gender,
+    required DateTime? dob,
+    required String name,
+    required BuildContext context,
+  }) async {
+    isLoading = true;
+    notifyListeners();
 
-  try {
-    final User? user = FirebaseAuth.instance.currentUser;
+    try {
+      final User? user = FirebaseAuth.instance.currentUser;
 
-    if (user == null) {
+      if (user == null) {
+        AppUtils.showOnetimeSnackbar(
+          context: context,
+          message: "No user is logged in.",
+          bg: Colors.red,
+        );
+        isLoading = false;
+        notifyListeners();
+        return;
+      }
+
+      // Check if username is already taken
+      final bool usernameAvailable = await isUsernameAvailable(username);
+      if (!usernameAvailable) {
+        AppUtils.showOnetimeSnackbar(
+          context: context,
+          message: "Username is already taken. Please choose another one.",
+          bg: Colors.red,
+        );
+        isLoading = false;
+        notifyListeners();
+        return;
+      }
+
+      final String uid = user.uid;
+      log("User's uid is : $uid");
+
+      String? imageUrl;
+      if (selectedImage != null) {
+        imageUrl = await uploadImageToImgbb(selectedImage!);
+        log("Image uploaded: $imageUrl");
+      }
+
+      // Save both name and image_url to Firestore
+      await FirebaseFirestore.instance
+          .collection('profile_details')
+          .doc(uid)
+          .set({
+        'name': name,
+        'DOB': dob,
+        'username': username,
+        'gender': gender,
+        if (imageUrl != null) 'image_url': imageUrl,
+        'createdAt': FieldValue.serverTimestamp(),
+      });
+
       AppUtils.showOnetimeSnackbar(
         context: context,
-        message: "No user is logged in.",
+        message: "Profile saved successfully!",
+        bg: Colors.green,
+      );
+
+      Navigator.pushAndRemoveUntil(
+        context,
+        PageRouteBuilder(
+          pageBuilder: (context, animation, secondaryAnimation) =>
+              SetPinScreen(),
+          transitionsBuilder: (context, animation, secondaryAnimation, child) {
+            const begin = Offset(1.0, 0.0);
+            const end = Offset.zero;
+            const curve = Curves.ease;
+            final tween =
+                Tween(begin: begin, end: end).chain(CurveTween(curve: curve));
+            return SlideTransition(
+                position: animation.drive(tween), child: child);
+          },
+        ),
+        (Route<dynamic> route) => false,
+      );
+    } catch (e) {
+      log("onAddProfile error: $e");
+      AppUtils.showOnetimeSnackbar(
+        context: context,
+        message: "Failed to save profile.",
         bg: Colors.red,
       );
-      isLoading = false;
-      notifyListeners();
-      return;
     }
 
-    final String uid = user.uid;
-    log("User's uid is : $uid");
-
-    String? imageUrl;
-    if (selectedImage != null) {
-      imageUrl = await uploadImageToImgbb(selectedImage!);
-      log("Image uploaded: $imageUrl");
-    }
-
-    // Save both name and image_url to Firestore
-    await FirebaseFirestore.instance
-        .collection('profile_details')
-        .doc(uid)
-        .set({
-      'name': name,
-      if (imageUrl != null) 'image_url': imageUrl,
-      'createdAt': FieldValue.serverTimestamp(),
-    });
-
-    AppUtils.showOnetimeSnackbar(
-      context: context,
-      message: "Profile saved successfully!",
-      bg: Colors.green,
-    );
-
-   
-
-    Navigator.pushAndRemoveUntil(
-      context,
-      PageRouteBuilder(
-        pageBuilder: (context, animation, secondaryAnimation) =>
-            SetPinScreen(),
-        transitionsBuilder: (context, animation, secondaryAnimation, child) {
-          const begin = Offset(1.0, 0.0);
-          const end = Offset.zero;
-          const curve = Curves.ease;
-          final tween = Tween(begin: begin, end: end).chain(CurveTween(curve: curve));
-          return SlideTransition(position: animation.drive(tween), child: child);
-        },
-      ),
-      (Route<dynamic> route) => false,
-    );
-  } catch (e) {
-    log("onAddProfile error: $e");
-    AppUtils.showOnetimeSnackbar(
-      context: context,
-      message: "Failed to save profile.",
-      bg: Colors.red,
-    );
+    isLoading = false;
+    notifyListeners();
   }
-
-  isLoading = false;
-  notifyListeners();
-}
-
 }
