@@ -1,6 +1,7 @@
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:real_chat/Controller/Chat%20Controller/chat_controller.dart';
 import 'package:real_chat/Controller/Profile%20Screen%20Controller/profile_screen_controller.dart';
 import 'package:real_chat/Controller/Sign%20In%20Screen%20Controller/sign_in_controller.dart';
 import 'package:real_chat/Controller/Sign%20Up%20Screen%20Controller/sign_up_controller.dart';
@@ -34,6 +35,9 @@ class MyApp extends StatelessWidget {
         ),
         ChangeNotifierProvider(
           create: (context) => ProfileScreenController(),
+        ),
+        ChangeNotifierProvider(
+          create: (context) => ChatController(),
         ),
       ],
       child: MaterialApp(

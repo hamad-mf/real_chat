@@ -8,7 +8,7 @@ import 'package:real_chat/Utils/color_constants.dart';
 import 'package:real_chat/View/SignUp%20Screen/sign_up_screen.dart';
 import 'package:real_chat/View/Widgets/custom_textfield.dart';
 import 'package:real_chat/View/Widgets/responsive_helper.dart';
-import 'package:real_chat/main.dart';
+
 
 class SignInScreen extends StatefulWidget {
   const SignInScreen({super.key});

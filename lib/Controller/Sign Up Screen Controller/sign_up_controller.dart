@@ -139,7 +139,7 @@ Future<bool> isUsernameAvailable(String username) async {
           .createUserWithEmailAndPassword(email: email, password: password);
 
       //Get the uid of the registered user
-      String uid = credential.user!.uid;
+      // String uid = credential.user!.uid;
 
       if (credential.user?.uid != null) {
         AppUtils.showOnetimeSnackbar(

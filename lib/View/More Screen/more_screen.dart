@@ -207,7 +207,7 @@ class _MoreScreenState extends State<MoreScreen> {
                   ),
                   itemBuilder: (context, index) {
                     final item = items[index];
-                    final isSwitch = item['trailing'] == 'switch';
+                    // final isSwitch = item['trailing'] == 'switch';
                     final key = item['key'];
                     final route = item['route'];
                     final switchValue =
