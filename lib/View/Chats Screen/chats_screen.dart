@@ -107,6 +107,8 @@ class _ChatsScreenState extends State<ChatsScreen> {
                                 context,
                                 MaterialPageRoute(
                                   builder: (context) => ChatScreen(
+                                    receiverUsername:
+                                        userData['username'] ?? 'no username',
                                     receiverId: user.id,
                                     receiverName: userData['name'] ?? 'no name',
                                     receiverImage: userData['image_url'] ?? '',
@@ -118,30 +120,83 @@ class _ChatsScreenState extends State<ChatsScreen> {
                                 horizontal: 12, vertical: 8),
                             child: Container(
                               decoration: BoxDecoration(
-                                color: Colors.white,
+                                color: Colors.transparent,
                                 borderRadius: BorderRadius.circular(12),
-                                boxShadow: [
-                                  BoxShadow(
-                                    color: Colors.black12,
-                                    blurRadius: 6,
-                                    offset: Offset(0, 5),
-                                  ),
-                                ],
+                                // boxShadow: [
+                                //   BoxShadow(
+                                //     color: Colors.black12,
+                                //     blurRadius: 6,
+                                //     offset: Offset(0, 5),
+                                //   ),
+                                // ],
                               ),
                               padding: const EdgeInsets.all(12),
                               child: Row(
                                 children: [
                                   CircleAvatar(
-                                    radius: 28,
+                                    radius: 21,
                                     backgroundImage:
                                         NetworkImage(user['image_url']),
                                   ),
                                   const SizedBox(width: 16),
-                                  Text(
-                                    user['name'],
-                                    style: const TextStyle(
-                                      fontSize: 18,
-                                      fontWeight: FontWeight.w600,
+                                  Expanded(
+                                    child: Column(
+                                      crossAxisAlignment:
+                                          CrossAxisAlignment.start,
+                                      children: [
+                                        Row(
+                                          mainAxisAlignment:
+                                              MainAxisAlignment.spaceBetween,
+                                          children: [
+                                            Text(
+                                              user['name'],
+                                              style: const TextStyle(
+                                                fontSize: 16,
+                                                fontWeight: FontWeight.bold,
+                                              ),
+                                            ),
+                                            Text(
+                                              "10:25",
+                                              style: TextStyle(
+                                                  fontSize: 12,
+                                                  fontWeight: FontWeight.bold,
+                                                  color: ColorConstants
+                                                      .msgDateTime),
+                                            )
+                                          ],
+                                        ),
+                                        Row(
+                                            mainAxisAlignment:
+                                                MainAxisAlignment.spaceBetween,
+                                            children: [
+                                              Text(
+                                                "last message",
+                                                style: TextStyle(
+                                                    fontSize: 12,
+                                                    fontWeight: FontWeight.bold,
+                                                    color: ColorConstants
+                                                        .lastMessage),
+                                              ),
+                                              Container(
+                                                padding: EdgeInsets.symmetric(
+                                                    horizontal: 5, vertical: 2),
+                                                decoration: BoxDecoration(
+                                                    color: ColorConstants
+                                                        .msgCountContainer,
+                                                    borderRadius:
+                                                        BorderRadius.circular(
+                                                            6)),
+                                                child: Text(
+                                                  "5",
+                                                  style: TextStyle(
+                                                      color: Colors.white,
+                                                      fontSize: 14,
+                                                      fontWeight:
+                                                          FontWeight.bold),
+                                                ),
+                                              )
+                                            ])
+                                      ],
                                     ),
                                   ),
                                 ],

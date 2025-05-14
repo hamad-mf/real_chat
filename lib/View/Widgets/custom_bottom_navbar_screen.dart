@@ -1,16 +1,15 @@
-
 import 'package:flutter/material.dart';
 import 'package:real_chat/View/Chats%20Screen/chats_screen.dart';
 import 'package:real_chat/View/Group%20Screen/group_screen.dart';
 import 'package:real_chat/View/More%20Screen/more_screen.dart';
 import 'package:real_chat/View/Profile%20Screen/profile_screen.dart';
 
-
 class CustomBottomNavbarScreen extends StatefulWidget {
   const CustomBottomNavbarScreen({super.key});
 
   @override
-  State<CustomBottomNavbarScreen> createState() => _CustomBottomNavbarScreenState();
+  State<CustomBottomNavbarScreen> createState() =>
+      _CustomBottomNavbarScreenState();
 }
 
 class _CustomBottomNavbarScreenState extends State<CustomBottomNavbarScreen> {
@@ -24,10 +23,26 @@ class _CustomBottomNavbarScreenState extends State<CustomBottomNavbarScreen> {
   ];
 
   final List<Map<String, dynamic>> _navItems = [
-    {'icon': Icons.chat_bubble_outline, 'label': 'Chats'},
-    {'icon': Icons.group_outlined, 'label': 'Groups'},
-    {'icon': Icons.person_outline, 'label': 'Profile'},
-    {'icon': Icons.more_horiz, 'label': 'more'},
+    {
+      'selectedIcon': 'assets/images/icons/chats_selected.png',
+      'unselectedIcon': 'assets/images/icons/chats_unselected.png',
+      'label': 'Chats',
+    },
+    {
+      'selectedIcon': 'assets/images/icons/groups_selected.png',
+      'unselectedIcon': 'assets/images/icons/groups_unselected.png',
+      'label': 'Groups',
+    },
+    {
+      'selectedIcon': 'assets/images/icons/profile_selected.png',
+      'unselectedIcon': 'assets/images/icons/profile_unselected.png',
+      'label': 'Profile',
+    },
+    {
+      'selectedIcon': 'assets/images/icons/more_selected.png',
+      'unselectedIcon': 'assets/images/icons/more_unselected.png',
+      'label': 'More',
+    },
   ];
 
   @override
@@ -51,7 +66,8 @@ class _CustomBottomNavbarScreenState extends State<CustomBottomNavbarScreen> {
               },
               child: AnimatedContainer(
                 duration: const Duration(milliseconds: 300),
-                padding: const EdgeInsets.symmetric(vertical: 10, horizontal: 16),
+                padding:
+                    const EdgeInsets.symmetric(vertical: 10, horizontal: 25),
                 decoration: isSelected
                     ? BoxDecoration(
                         color: const Color(0xFF097BD7),
@@ -61,9 +77,12 @@ class _CustomBottomNavbarScreenState extends State<CustomBottomNavbarScreen> {
                 child: Column(
                   mainAxisSize: MainAxisSize.min,
                   children: [
-                    Icon(
-                      _navItems[index]['icon'],
-                      color: isSelected ? Colors.white : Colors.grey[600],
+                    Image.asset(
+                      isSelected
+                          ? _navItems[index]['selectedIcon']
+                          : _navItems[index]['unselectedIcon'],
+                      width: 24,
+                      height: 24,
                     ),
                     const SizedBox(height: 4),
                     Text(
